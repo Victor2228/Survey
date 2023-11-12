@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Questions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(
+            97.86deg,
+            #a509ff 0%,
+            #34acc7 53.65%,
+            #a134c7 100%
+            );
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            width: 70%;
+            max-width: 600px;
+        }
+
+        li {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Survey Questions</h1>
+    <ul id="survey-questions">
+        <!-- Survey questions will be displayed here -->
+    </ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const surveyQuestions = JSON.parse(localStorage.getItem('survey'));
+            const questionsList = document.getElementById('survey-questions');
+
+            if (surveyQuestions) {
+                surveyQuestions.questions.forEach((question, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Question ${index + 1}: ${question.text} - Type: ${question.type}`;
+                    questionsList.appendChild(listItem);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

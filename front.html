@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Creation Platform</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(
+            97.86deg,
+            #a509ff 0%,
+            #34acc7 53.65%,
+            #a134c7 100%
+            );
+            margin: 0;
+            padding: 0;
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            padding: 20px;
+            
+            border-radius: 18px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #ccc;
+            text-decoration: underline;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .question label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .question input[type="text"],
+        .question select {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.75);
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        #questions {
+            list-style: none;
+            padding: 0;
+        }
+
+        #questions li {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            
+        }
+
+        .btn-group {
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(
+            97.86deg,
+            #a509ff 0%,
+            #34acc7 53.65%,
+            #a134c7 100%
+            );
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 5px 5px;
+        }
+
+        button:hover {
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.75);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Create a Survey</h1>
+        </div>
+        <form id="survey-form">
+            <div class="question">
+                <label for="survey-title">Survey Title:</label>
+                <input type="text" id="survey-title" name="survey-title" required placeholder="Enter the survey title">
+            </div>
+
+            <ul id="questions">
+                <!-- Questions will be added here dynamically -->
+            </ul>
+
+            <div class="btn-group">
+                <button type="button" id="add-question">Add Question</button>
+                <button type="submit" id="create-survey">Create Survey</button>
+                <button id="display-survey">Display Survey Questions</button>
+            </div>
+            
+        </form>
+    </div>
+
+    <script>
+        const addQuestionButton = document.getElementById('add-question');
+        const questionsList = document.getElementById('questions');
+        let questionCount = 0;
+
+        addQuestionButton.addEventListener('click', () => {
+            questionCount++;
+            const newQuestion = document.createElement('li');
+            newQuestion.innerHTML = `
+                <div class="question">
+                    <label for="question-${questionCount}">Question ${questionCount}:</label>
+                    <input type="text" id="question-${questionCount}" name="question-${questionCount}" required placeholder="Enter the question">
+                    <select name="question-type-${questionCount}">
+                        <option value="text">Text</option>
+                        <option value="multiple-choice">Multiple Choice</option>
+                        <option value="checkbox">Checkbox</option>
+                        <option value="radio">Radio Buttons</option>
+                    </select>
+                </div>
+            `;
+            questionsList.appendChild(newQuestion);
+        });
+        const surveyForm = document.getElementById('survey-form');
+        surveyForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Store survey data in local storage
+            const surveyData = {
+                title: document.getElementById('survey-title').value,
+                questions: []
+            };
+
+            for (let i = 1; i <= questionCount; i++) {
+                surveyData.questions.push({
+                    text: document.getElementById(`question-${i}`).value,
+                    type: document.querySelector(`[name="question-type-${i}"]`).value
+                });
+            }
+
+            localStorage.setItem('survey', JSON.stringify(surveyData));
+            alert('Survey created and stored in local storage.');
+        });
+
+        const displaySurveyButton = document.getElementById('display-survey');
+        displaySurveyButton.addEventListener('click', () => {
+            const surveyData = {
+                title: document.getElementById('survey-title').value,
+                questions: []
+            };
+
+            for (let i = 1; i <= questionCount; i++) {
+                surveyData.questions.push({
+                    text: document.getElementById(`question-${i}`).value,
+                    type: document.querySelector(`[name="question-type-${i}"]`).value
+                });
+            }
+
+            const encodedData = encodeURIComponent(JSON.stringify(surveyData));
+            const surveyURL = `display_survey.html?data=${encodedData}`;
+            window.location.href = surveyURL;
+        });
+    </script>
+</body>
+</html>
